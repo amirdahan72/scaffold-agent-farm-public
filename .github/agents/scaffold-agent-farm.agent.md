@@ -145,7 +145,7 @@ Generated agents can also use these MCP servers (configured in `.vscode/mcp.json
 | Server | Purpose |
 |--------|---------|
 | **Azure MCP Server** | Query and manage Azure resources (resource groups, storage, app services, monitors, etc.). Requires the [Azure MCP Server VS Code extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-mcp-server) and Azure CLI authentication (`az login`). |
-| **microsoft-outlook-mail** | Send, reply, forward, and search Outlook email via Microsoft Graph. Optional — requires the microsoft-outlook-mail MCP extension and authentication. |
+| **microsoft-outlook-mail** | Send, reply, forward, and search Outlook email via Microsoft Graph. Optional — configured in user-level `~/.copilot/mcp-config.json` (remote HTTP MCP via agent365.svc.cloud.microsoft). |
 
 ## Available CLI Tools
 

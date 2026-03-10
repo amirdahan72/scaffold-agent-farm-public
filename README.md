@@ -67,6 +67,9 @@ A command-line tool that queries your Microsoft 365 tenant for internal context 
 ### Azure MCP Server
 An MCP server that lets agents query and manage Azure resources (resource groups, storage accounts, app services, etc.). Pre-configured in `.vscode/mcp.json`.
 
+### Microsoft Outlook Mail MCP (Optional)
+A remote HTTP MCP server that lets agents send, reply, forward, and search Outlook email via Microsoft Graph. Configured in your user-level `~/.copilot/mcp-config.json`.
+
 ## How Generated Agent Farms Work
 
 When you ask the master agent to create a farm, it generates:

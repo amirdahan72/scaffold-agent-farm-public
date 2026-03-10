@@ -99,12 +99,12 @@ Generated agent farms can reference these shared skills (already in `.github/ski
 
 ### Available MCP Servers
 
-Generated agent farms can also use MCP servers configured in `.vscode/mcp.json`:
+Generated agent farms can also use MCP servers:
 
-| Server | When to include |
-|--------|----------------|
-| **Azure MCP Server** | Agent needs to query Azure resources (resource groups, storage, app services, etc.) |
-| **microsoft-outlook-mail** | Agent needs to send, reply, forward, or search Outlook email (optional — requires MCP authentication) |
+| Server | Config location | When to include |
+|--------|----------------|----------------|
+| **Azure MCP Server** | `.vscode/mcp.json` (workspace) | Agent needs to query Azure resources (resource groups, storage, app services, etc.) |
+| **microsoft-outlook-mail** | `~/.copilot/mcp-config.json` (user-level) | Agent needs to send, reply, forward, or search Outlook email (optional — requires MCP authentication) |
 
 ### Work IQ CLI
 

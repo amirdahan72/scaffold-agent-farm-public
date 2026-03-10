@@ -17,7 +17,7 @@ Send, reply, forward, draft, and search Outlook email via the **microsoft-outloo
 
 ## Prerequisites
 
-- **microsoft-outlook-mail MCP** must be connected and authenticated (configured in `.vscode/mcp.json`)
+- **microsoft-outlook-mail MCP** must be connected and authenticated (configured in your user-level `~/.copilot/mcp-config.json`)
 
 ## MCP Capabilities Reference
 
