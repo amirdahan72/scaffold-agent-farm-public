@@ -1,0 +1,14 @@
+{
+  "name": "scaffold-agent-farm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Multi-agent system for GitHub Copilot — generates PM deliverables with cooperating subagents",
+  "dependencies": {
+    "pptxgenjs": "^4.0.1",
+    "docx": "^9.6.1",
+    "exceljs": "^4.4.0",
+    "vega": "^6.2.0",
+    "vega-lite": "^6.4.2",
+    "sharp": "^0.34.5"
+  }
+}
