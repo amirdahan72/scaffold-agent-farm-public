@@ -134,6 +134,7 @@ All generated agents can use these skills (already in `.github/skills/`):
 | **docx-writer** | Create, read, and edit Microsoft Word (.docx) documents |
 | **xlsx-writer** | Create Excel workbooks with formatted tables, conditional formatting, and auto-filters |
 | **chart-creator** | Generate PNG/SVG chart images (bar, line, pie, heatmap) from data tables |
+| **send-email** | Send, reply, forward, draft, or search Outlook email (optional — requires microsoft-outlook-mail MCP) |
 | **make-agent-farm** | Scaffold a complete multi-agent system (agent farm) |
 | **make-skill-template** | Create new Agent Skills for GitHub Copilot |
 
@@ -144,6 +145,7 @@ Generated agents can also use these MCP servers (configured in `.vscode/mcp.json
 | Server | Purpose |
 |--------|---------|
 | **Azure MCP Server** | Query and manage Azure resources (resource groups, storage, app services, monitors, etc.). Requires the [Azure MCP Server VS Code extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-mcp-server) and Azure CLI authentication (`az login`). |
+| **microsoft-outlook-mail** | Send, reply, forward, and search Outlook email via Microsoft Graph. Optional — requires the microsoft-outlook-mail MCP extension and authentication. |
 
 ## Available CLI Tools
 

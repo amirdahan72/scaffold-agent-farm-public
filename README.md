@@ -99,6 +99,7 @@ Each subagent writes to disk. The next subagent reads from disk. This keeps cont
 | **docx-writer** | Creates Microsoft Word (.docx) documents | Exporting deliverables as formatted Word docs |
 | **make-agent-farm** | Scaffolds new agent farm folders and profiles | Used by the master agent to create farms |
 | **make-skill-template** | Scaffolds new skill folders and SKILL.md files | Used when a farm needs a custom skill |
+| **send-email** | Sends, replies, forwards, drafts, and searches Outlook email via MCP | Distributing deliverables to stakeholders, replying to threads (optional — requires microsoft-outlook-mail MCP) |
 
 ## Example Use Cases
 

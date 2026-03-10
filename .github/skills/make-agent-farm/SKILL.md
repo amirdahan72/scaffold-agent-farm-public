@@ -94,6 +94,7 @@ Generated agent farms can reference these shared skills (already in `.github/ski
 | `docx-writer` | Agent needs to produce Microsoft Word (.docx) files |
 | `xlsx-writer` | Agent needs to produce Excel workbooks (matrices, scorecards, trackers) |
 | `chart-creator` | Agent needs to produce chart images (bar, line, pie, heatmap) for visual data |
+| `send-email` | Agent needs to email deliverables to stakeholders or notify recipients (requires microsoft-outlook-mail MCP) |
 | `make-skill-template` | Agent farm needs a custom skill that doesn't exist yet |
 
 ### Available MCP Servers
@@ -103,6 +104,7 @@ Generated agent farms can also use MCP servers configured in `.vscode/mcp.json`:
 | Server | When to include |
 |--------|----------------|
 | **Azure MCP Server** | Agent needs to query Azure resources (resource groups, storage, app services, etc.) |
+| **microsoft-outlook-mail** | Agent needs to send, reply, forward, or search Outlook email (optional — requires MCP authentication) |
 
 ### Work IQ CLI
 
