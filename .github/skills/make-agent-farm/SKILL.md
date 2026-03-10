@@ -247,6 +247,24 @@ The orchestrator should be a **slim file (~100-130 lines)** that:
 5. Defines **Step 3: Run Setup** — create `work/runs/YYYY-MM-DD-<slug>/`
 6. Defines **Step 4: Dispatch Sub-Agents** — a parameter table and dispatch sequence
 
+##### Skill Injection Rule (CRITICAL)
+
+Sub-agents are stateless — they cannot read files from the workspace unless the orchestrator gives them the content. When a prompt template references a skill (e.g., *"Read the `web-search` skill at `.github/skills/web-search/SKILL.md`"*), the **orchestrator must**:
+
+1. **Before dispatching**, scan the prompt template for `.github/skills/*/SKILL.md` references
+2. **Read each referenced SKILL.md** file
+3. **Inline the skill content** into the sub-agent prompt under a `## Skill: <name>` section
+4. **Remove the "Read the skill at..." instruction** from the prompt — the content is now inline
+
+This ensures sub-agents have the complete workflow instructions (tool usage patterns, output formats, quality rules) without needing file access. Never assume a sub-agent can discover or read skill files on its own.
+
+The orchestrator's Rules section must include:
+
+```markdown
+- **Skill injection** — before dispatching any sub-agent, read all `.github/skills/*/SKILL.md` files
+  referenced in its prompt template and inline their content into the sub-agent prompt
+```
+
 The dispatch section should look like:
 
 ```markdown
