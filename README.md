@@ -100,6 +100,9 @@ Each subagent writes to disk. The next subagent reads from disk. This keeps cont
 | **ppt-creator** | Creates `.pptx` slide decks from structured content | Producing presentation deliverables |
 | **doc-writer** | Writes structured markdown (PRDs, specs, briefs) | Producing document deliverables |
 | **docx-writer** | Creates Microsoft Word (.docx) documents | Exporting deliverables as formatted Word docs |
+| **xlsx-writer** | Creates Excel workbooks with formatted tables and conditional formatting | Producing spreadsheets, scorecards, feature matrices |
+| **chart-creator** | Generates PNG/SVG chart images (bar, line, pie, heatmap) from data | Creating visualizations for briefs, decks, and reports |
+| **ado-reader** | Queries Azure DevOps work items, sprint backlogs, and iteration status | Getting accurate sprint data, bug counts, feature completion |
 | **make-agent-farm** | Scaffolds new agent farm folders and profiles | Used by the master agent to create farms |
 | **make-skill-template** | Scaffolds new skill folders and SKILL.md files | Used when a farm needs a custom skill |
 | **send-email** | Sends, replies, forwards, drafts, and searches Outlook email via MCP | Distributing deliverables to stakeholders, replying to threads (optional — requires microsoft-outlook-mail MCP) |
