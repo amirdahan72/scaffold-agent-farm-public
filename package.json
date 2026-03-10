@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "description": "Multi-agent system for GitHub Copilot — generates PM deliverables with cooperating subagents",
+  "scripts": {
+    "evals": "node evals/run-evals.js",
+    "evals:strict": "node evals/run-evals.js --strict"
+  },
   "dependencies": {
     "pptxgenjs": "^4.0.1",
     "docx": "^9.6.1",
