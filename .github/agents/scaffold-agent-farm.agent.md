@@ -130,8 +130,9 @@ All generated agents can use these skills (already in `.github/skills/`):
 | **sharepoint-reader** | Download SharePoint or OneDrive files from URLs into farm resource folders (large-file safe) |
 | **ado-reader** | Query Azure DevOps work items, sprint backlogs, and iteration status (read-only) |
 | **ppt-creator** | Generate professional slide decks |
-| **doc-writer** | Write structured markdown documents (PRDs, specs, briefs) |
-| **docx-writer** | Create, read, and edit Microsoft Word (.docx) documents |
+| **doc-writer** | Write structured markdown documents (PRDs, specs, strategy docs, briefs) with chart placeholders |
+| **docx-writer** | Create Microsoft Word (.docx) documents with Microsoft brand styling |
+| **chart-prompt-writer** | Generate companion chart-prompts files with LLM prompts for diagram placeholders |
 | **xlsx-writer** | Create Excel workbooks with formatted tables, conditional formatting, and auto-filters |
 | **chart-creator** | Generate PNG/SVG chart images (bar, line, pie, heatmap) from data tables |
 | **send-email** | Send, reply, forward, draft, or search Outlook email (optional — requires microsoft-outlook-mail MCP) |

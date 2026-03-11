@@ -13,6 +13,7 @@ const strictMode = process.argv.includes("--strict") || process.env.EVAL_STRICT 
 const requiredSkills = [
   "ado-reader",
   "chart-creator",
+  "chart-prompt-writer",
   "doc-writer",
   "docx-writer",
   "make-agent-farm",

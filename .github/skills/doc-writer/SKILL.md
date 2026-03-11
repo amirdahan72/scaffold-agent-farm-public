@@ -1,12 +1,12 @@
 ```skill
 ---
 name: doc-writer
-description: 'Write structured markdown documents such as PRDs, specs, design docs, competitive briefs, roadmaps, and launch checklists. Use when asked to produce a document, write a PRD, create a spec, draft a brief, or generate any structured markdown deliverable. Outputs clean, well-organized markdown with proper sections, tables, and evidence attribution.'
+description: 'Write structured markdown documents such as PRDs, specs, design docs, strategy docs, competitive briefs, roadmaps, and launch checklists. Use when asked to produce a document, write a PRD, create a spec, draft a brief, write a strategy, or generate any structured markdown deliverable. Outputs clean, well-organized markdown with proper sections, tables, chart placeholders, and evidence attribution.'
 ---
 
 # Doc Writer
 
-Write structured markdown documents — PRDs, specs, design docs, competitive briefs, roadmaps, and other PM deliverables. Produces clean, well-organized markdown with proper headings, tables, evidence attribution, and source URLs.
+Write structured markdown documents — PRDs, specs, design docs, strategy documents, competitive briefs, roadmaps, and other PM deliverables. Produces clean, well-organized markdown with proper headings, tables, chart placeholders, evidence attribution, and source URLs.
 
 ## When to Use This Skill
 
@@ -124,6 +124,16 @@ Read all source files specified by the calling agent:
 3. **Include source URLs** for every factual claim.
 4. **Label internal context** clearly (Work IQ findings).
 5. **Flag gaps** with `[NEEDS DATA]` markers.
+6. **Insert chart placeholders** for content that benefits from a visual (architecture diagrams, integration flows, competitive maps, roadmap timelines). Use this format:
+   ```markdown
+   > **[Chart N Placeholder: <Descriptive Title>]**
+   > *See chart-prompts.md — Chart N*
+   ```
+   Number charts sequentially. Place each placeholder at the contextually appropriate point in the document.
+
+### Step 3a — Generate chart prompts (if placeholders exist)
+
+If the document contains any chart placeholders, use the `chart-prompt-writer` skill (`.github/skills/chart-prompt-writer/SKILL.md`) to generate a companion `chart-prompts.md` file with one detailed LLM prompt per placeholder.
 
 ### Step 4 — Quality check
 

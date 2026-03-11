@@ -90,8 +90,9 @@ Generated agent farms can reference these shared skills (already in `.github/ski
 | `sharepoint-reader` | PM provides SharePoint or OneDrive links that must be downloaded into farm-local resources |
 | `ado-reader` | Agent needs Azure DevOps work items, sprint backlogs, or iteration status (read-only) |
 | `ppt-creator` | Agent needs to produce slide decks |
-| `doc-writer` | Agent needs to produce structured markdown documents (PRDs, specs, briefs) |
-| `docx-writer` | Agent needs to produce Microsoft Word (.docx) files |
+| `doc-writer` | Agent needs to produce structured markdown documents (PRDs, specs, strategy docs, briefs) |
+| `docx-writer` | Agent needs to produce Microsoft Word (.docx) files with Microsoft brand styling |
+| `chart-prompt-writer` | Document has chart placeholders and needs a companion chart-prompts file |
 | `xlsx-writer` | Agent needs to produce Excel workbooks (matrices, scorecards, trackers) |
 | `chart-creator` | Agent needs to produce chart images (bar, line, pie, heatmap) for visual data |
 | `send-email` | Agent needs to email deliverables to stakeholders or notify recipients (requires microsoft-outlook-mail MCP) |

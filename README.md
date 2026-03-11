@@ -28,8 +28,9 @@ scaffold-agent-farm/
 │       ├── workiq-context/SKILL.md        ← queries Work IQ for M365 context
 │       ├── sharepoint-reader/SKILL.md      ← downloads SharePoint/OneDrive files into farm resources
 │       ├── ppt-creator/SKILL.md           ← generates slide decks
-│       ├── doc-writer/SKILL.md            ← writes structured markdown docs
-│       └── docx-writer/SKILL.md           ← creates Word (.docx) documents
+│       ├── doc-writer/SKILL.md            ← writes structured markdown docs with chart placeholders
+│       ├── docx-writer/SKILL.md           ← creates Word (.docx) documents (Microsoft brand styling)
+│       └── chart-prompt-writer/SKILL.md   ← generates LLM prompts for diagram placeholders
 ├── .vscode/
 │   └── mcp.json                           ← Azure MCP Server config
 ├── farms/                                 ← generated agent farms go here
@@ -98,8 +99,9 @@ Each subagent writes to disk. The next subagent reads from disk. This keeps cont
 | **workiq-context** | Queries Work IQ CLI for internal M365 context | Gathering internal discussions, decisions, stakeholder feedback |
 | **sharepoint-reader** | Downloads SharePoint/OneDrive files from URLs into local farm resource folders | Ingesting PM-provided SharePoint links (including large files) for collector/synthesizer phases |
 | **ppt-creator** | Creates `.pptx` slide decks from structured content | Producing presentation deliverables |
-| **doc-writer** | Writes structured markdown (PRDs, specs, briefs) | Producing document deliverables |
-| **docx-writer** | Creates Microsoft Word (.docx) documents | Exporting deliverables as formatted Word docs |
+| **doc-writer** | Writes structured markdown (PRDs, specs, strategy docs, briefs) with chart placeholders | Producing document deliverables with diagram placeholder support |
+| **docx-writer** | Creates Microsoft Word (.docx) documents with Microsoft brand styling | Exporting deliverables as formatted Word docs |
+| **chart-prompt-writer** | Generates companion chart-prompts files with LLM prompts for diagrams | Creating detailed prompts to produce visuals for chart placeholders |
 | **xlsx-writer** | Creates Excel workbooks with formatted tables and conditional formatting | Producing spreadsheets, scorecards, feature matrices |
 | **chart-creator** | Generates PNG/SVG chart images (bar, line, pie, heatmap) from data | Creating visualizations for briefs, decks, and reports |
 | **ado-reader** | Queries Azure DevOps work items, sprint backlogs, and iteration status | Getting accurate sprint data, bug counts, feature completion |

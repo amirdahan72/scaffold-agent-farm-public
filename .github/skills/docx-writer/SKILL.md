@@ -43,17 +43,35 @@ Read the source document (markdown PRD, brief, spec, etc.) and identify:
 
 | Markdown element | Word style |
 |-----------------|------------|
-| `# Heading 1` | Heading 1 (28pt, bold) |
-| `## Heading 2` | Heading 2 (22pt, bold) |
-| `### Heading 3` | Heading 3 (16pt, bold) |
-| `#### Heading 4` | Heading 4 (14pt, bold) |
-| Body text | Normal (11pt) |
+| `# Heading 1` | Title (28pt, dark blue `#003067`) |
+| `## Heading 2` | Heading 1 (18pt, Azure blue `#0078D4`) |
+| `### Heading 3` | Heading 2 (14pt, Azure blue `#0078D4`) |
+| `#### Heading 4` | Heading 3 (12pt, dark blue `#003067`) |
+| Body text | Normal (10.5pt Calibri) |
 | `- bullet` | List Bullet |
 | `1. item` | List Number |
-| `> blockquote` | Intense Quote (used for callouts/internal context) |
+| `> **[Chart N Placeholder: ...]**` | Chart placeholder box (see Step 3a) |
+| `> blockquote` (other) | Indented italic paragraph, gray `RGB(80,80,80)` |
 | `**bold**` | Bold run |
 | `*italic*` | Italic run |
-| Table | Table Grid with header row shading |
+| `` `code` `` | Consolas 9pt, dark blue `#003067` |
+| Table | Table Grid — header row shaded `#DEECF9`, bold 10pt; body 9.5pt |
+
+### Step 2a — Detect chart placeholders
+
+Scan the source markdown for chart placeholder blocks matching this pattern:
+
+```
+> **[Chart N Placeholder: <Title>]**
+> *See chart-prompts-for-graphical-llm.md — Chart N*
+```
+
+For each match, render a **styled placeholder box** in the docx:
+- A single-cell table with Azure blue border (`#0078D4`, 1.5pt)
+- Centered content: `[CHART N PLACEHOLDER]` (14pt bold Azure blue), chart title (12pt gray), instruction text (10pt gray italic)
+- If a companion `chart-prompts*.md` file exists, reference it in the placeholder
+
+All other blockquotes (`>` without the Chart Placeholder pattern) render as indented italic paragraphs.
 
 ### Step 3 — Generate the document (Node.js)
 
@@ -199,25 +217,39 @@ Before delivering, verify:
 
 ## Formatting Guidelines
 
+### Microsoft brand palette
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| Azure blue | `#0078D4` | H1–H2 headings, chart placeholder borders |
+| Dark blue | `#003067` | Title, H3 headings, inline code |
+| Header shading | `#DEECF9` | Table header row background |
+| Text gray | `RGB(80,80,80)` | Metadata, blockquote text |
+| Light gray | `RGB(128,128,128)` | Footer, placeholder reference text |
+
 ### Page layout
 - **Margins:** 1 inch all sides (default)
-- **Font:** Calibri 11pt for body, Calibri Light for headings
+- **Font:** Calibri 10.5pt for body, Calibri for headings (see Step 2 size table)
 - **Line spacing:** 1.15 (Word default)
 
 ### Tables
-- Use **Table Grid** style with header row shading
+- Use **Table Grid** style with header row shading (`#DEECF9`)
+- Bold header row text (10pt), body text 9.5pt
 - Keep column widths proportional to content
-- Bold header row text
 - No empty cells — use "N/A" or "—" if no data
 
 ### Internal context blocks
-- Use blockquote/Intense Quote style
+- Indented paragraph, italic, gray `RGB(80,80,80)`
 - Prefix with "**Internal Context (Work IQ):**"
 - Add a note: *"Do not distribute externally."*
 
 ### Source attribution
-- Include hyperlinks where possible: `doc.add_paragraph().add_run('Source').add_hyperlink('https://...')`
-- If hyperlinks aren't supported in the chosen library, include full URLs as plain text in a Sources/References section at the end
+- Include hyperlinks where possible
+- If hyperlinks aren't supported, include full URLs as plain text in a Sources/References section at the end
+
+### Document footer
+- Centered, 9pt, light gray italic
+- Include document title and classification (e.g., "Microsoft Confidential")
 
 ## Rules
 
@@ -226,7 +258,8 @@ Before delivering, verify:
 - **Tables must have headers.** Always include a bold header row.
 - **Label internal content.** Work IQ findings must use the callout/blockquote style.
 - **Include sources.** Every factual claim needs a URL in the document or in a References section.
-- **Don't over-style.** Keep formatting clean and professional — no colored text, no decorative fonts.
+- **Use the brand palette.** Apply Azure blue / dark blue headings, `#DEECF9` header shading. No other colors or decorative fonts.
+- **Handle chart placeholders.** Detect `> **[Chart N Placeholder: ...]**` blocks and render as styled placeholder boxes (see Step 2a).
 
 ## Output
 
