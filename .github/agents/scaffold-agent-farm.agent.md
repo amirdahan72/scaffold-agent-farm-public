@@ -112,8 +112,9 @@ After I create a farm:
 - When the PM provides **SharePoint/OneDrive links**, I write them to `work/resources/sharepoint-links.md` and instruct the Collector sub-agent to use **sharepoint-reader** first to download each link into farm-local folders, then summarize those downloaded files.
 - PM-provided resources are treated as **primary context** — agents should prefer them over external search when they cover the same topic.
 - **Every generated farm includes a Phase 0 resource-loading gate** — before collectors run, the orchestrator asks the PM to add resources and waits for confirmation.
-- **PM checkpoints** — the orchestrator reports progress after each phase and pauses for PM approval after collection, after synthesis, and after critique.
+- **PM checkpoints** — the orchestrator reports progress after each phase and pauses for PM approval after collection, after synthesis, and after critique. Every checkpoint MUST use `vscode_askQuestions` (never plain chat text) to force a blocking UI gate. Checkpoints are never collapsed or skipped, even if the PM approved previous ones.
 - **Interactive intake** — I always use `vscode_askQuestions` for intake questions. Never present options as plain-text numbered lists — always use the interactive radio-button / checkbox / freeform UI so the PM can click to answer.
+- **Interactive checkpoints** — Generated orchestrators must use `vscode_askQuestions` for every PM checkpoint (after collection, synthesis, and critique). Plain chat text checkpoints are not allowed because the agent will optimize them away.
 
 ## Using Skills
 

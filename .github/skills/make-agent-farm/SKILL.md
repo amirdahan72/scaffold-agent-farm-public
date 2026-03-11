@@ -49,7 +49,51 @@ Sub-agents communicate via **disk files** — each writes to a known path, the n
 
 - `runSubagent` is **sequential/blocking** — sub-agents run one after another.
 - However, each sub-agent can fire **parallel tool calls internally** (e.g., multiple `fetch_webpage` calls at once).
-- The orchestrator can insert **PM checkpoints** between phases (e.g., after collection, after synthesis, after critique).
+- The orchestrator inserts **mandatory PM checkpoints** between phases (after collection, after synthesis, after critique).
+
+### PM Checkpoint Protocol (CRITICAL)
+
+Every PM checkpoint **MUST** use the `vscode_askQuestions` tool — never plain chat text. This is a hard requirement, not a suggestion.
+
+**Why:** Without a blocking UI interaction, the agent has an optimization bias to collapse remaining phases into a single pass when the PM says "yes" to an early checkpoint. `vscode_askQuestions` forces a true blocking gate — the agent literally cannot proceed without the PM clicking a button.
+
+**Rules:**
+1. Each checkpoint is a **separate** `vscode_askQuestions` call. Never batch multiple checkpoints.
+2. The call must include a **progress summary** (what was completed) and a **proceed/adjust question**.
+3. Even if the PM approved all previous checkpoints, the orchestrator MUST still pause at every remaining checkpoint. Phases are NEVER collapsed.
+4. Use radio buttons for the proceed/adjust choice, and an optional freeform field for feedback.
+
+**Example checkpoint call:**
+```
+vscode_askQuestions([
+  {
+    id: "phase1_review",
+    type: "radioButtons",
+    title: "Collection complete — X source files written, internal context gathered.",
+    options: ["Proceed to synthesis", "Let me review first", "Add more resources"]
+  },
+  {
+    id: "phase1_feedback",
+    type: "freeform",
+    title: "Any feedback or adjustments? (optional)",
+    placeholder: "e.g., focus more on pricing, skip competitor Z"
+  }
+])
+```
+
+**Required checkpoints (minimum 3):**
+| After Phase | Checkpoint purpose |
+|-------------|--------------------|
+| Collection (1a-1c) | PM reviews what was gathered before synthesis |
+| Synthesis (2) | PM reviews the draft before critique |
+| Critique (3) | PM reviews the critique before revision |
+
+The orchestrator's Rules section must include:
+```markdown
+- **Mandatory interactive checkpoints** — use `vscode_askQuestions` (never plain chat text) after
+  collection, after synthesis, and after critique. Each checkpoint is a separate call. Never skip
+  or collapse checkpoints, even if the PM approved previous ones.
+```
 
 ### Run Versioning
 
@@ -294,8 +338,10 @@ with values from the table above, and call `runSubagent`.
 | 4 | `prompts/reviser.prompt.md` | Fix critique issues |
 | 5 | `prompts/writer.prompt.md` | Final deliverable |
 
-**PM checkpoints:** Report progress after collection (1a-1c), after synthesis (2),
-and after critique (3). Pause for PM approval before continuing.
+**PM checkpoints (MANDATORY — use `vscode_askQuestions`):**
+After collection (1a-1c), after synthesis (2), and after critique (3), call
+`vscode_askQuestions` with a progress summary and proceed/adjust options.
+Never use plain chat text for checkpoints. Never collapse or skip checkpoints.
 ```
 
 The orchestrator must include:
@@ -317,10 +363,12 @@ At the start of every run, before Phase 0:
 > ⚠️ MANDATORY — The orchestrator does NOT proceed to collectors until the PM explicitly approves.
 
 Before dispatching any collector sub-agent:
-1. Prompt the PM: "Do you have reference files or SharePoint/OneDrive links to add to work/resources/?"
+1. Use `vscode_askQuestions` to ask the PM about reference files (radio buttons: "I have files to add",
+   "No resources — proceed", plus a freeform field for SharePoint/OneDrive links).
 2. If the PM provides files: save them. If not: acknowledge and proceed.
-3. Ask for explicit approval: "Resources are loaded (or skipped). Ready to start?"
-4. Wait for PM confirmation.
+3. Use `vscode_askQuestions` again to confirm: "Resources are loaded (or skipped). Ready to start?"
+   (radio buttons: "Start collection", "Wait — I need to add more").
+4. Do NOT proceed until the PM clicks a button.
 ```
 
 ##### Sub-Agent Phase Instructions
@@ -399,7 +447,8 @@ After generating a farm, verify:
 - [ ] Final deliverables go to `work/runs/<slug>/output/`
 - [ ] Rules include evidence discipline (no fabrication, source URLs)
 - [ ] Instructions mention installing required packages before skill use
-- [ ] **PM checkpoints** — orchestrator reports progress and pauses after collection, synthesis, and critique
+- [ ] **PM checkpoints use `vscode_askQuestions`** — every checkpoint (after collection, synthesis, and critique) uses `vscode_askQuestions` with progress summary and proceed/adjust options — never plain chat text
+- [ ] **Checkpoints are never collapsed** — orchestrator pauses at each checkpoint individually, even if PM approved all previous ones
 
 ## Troubleshooting
 
