@@ -8,11 +8,11 @@
     "evals:strict": "node evals/run-evals.js --strict"
   },
   "dependencies": {
-    "pptxgenjs": "^4.0.1",
     "docx": "^9.6.1",
     "exceljs": "^4.4.0",
+    "pptxgenjs": "^4.0.1",
+    "sharp": "^0.34.5",
     "vega": "^6.2.0",
-    "vega-lite": "^6.4.2",
-    "sharp": "^0.34.5"
+    "vega-lite": "^6.4.2"
   }
 }

@@ -364,8 +364,12 @@ At the start of every run, before Phase 0:
 
 Before dispatching any collector sub-agent:
 1. Use `vscode_askQuestions` to ask the PM about reference files (radio buttons: "I have files to add",
-   "No resources — proceed", plus a freeform field for SharePoint/OneDrive links).
-2. If the PM provides files: save them. If not: acknowledge and proceed.
+   "No resources — proceed", plus a freeform field for notes). Tell the PM: "You can drag-and-drop files
+   directly, or if you have SharePoint/OneDrive files, download them via your browser and drop them here
+   (programmatic SharePoint access often fails due to permissions)."
+2. If the PM provides files: save them. If the PM pastes SharePoint URLs: try the sharepoint-reader skill
+   first, but if it fails with 401/403, ask the PM to download the files via their browser instead.
+   If not: acknowledge and proceed.
 3. Use `vscode_askQuestions` again to confirm: "Resources are loaded (or skipped). Ready to start?"
    (radio buttons: "Start collection", "Wait — I need to add more").
 4. Do NOT proceed until the PM clicks a button.
