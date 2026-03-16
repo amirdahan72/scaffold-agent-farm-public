@@ -20,6 +20,7 @@ Download SharePoint or OneDrive files from a URL into the current farm's `work/r
 - Azure CLI installed and authenticated: `az login`
 - Access to the SharePoint or OneDrive file URL
 - Optional Markdown conversion tool: `pip install 'markitdown[all]'`
+- **For MCP fallback (Step 2b):** SharePoint MCP server — install the `ms-office.copilot-sharepoint-and-onedrive` VS Code extension. Without it, the 403 fallback path is unavailable.
 
 ## Important Scope
 
@@ -52,6 +53,22 @@ What the script does:
 2. Resolves the URL via Graph `shares` API
 3. Extracts `driveId` and `itemId`
 4. Downloads file content via `drives/{driveId}/items/{itemId}/content`
+
+### Step 2b - MCP fallback (if script returns 403)
+
+The `az` CLI Graph token may lack site-level permissions for certain SharePoint sites even when you have browser access. If the script exits with 403, fall back to the SharePoint MCP server:
+
+1. Call `getFileOrFolderMetadataByUrl` with the original SharePoint URL.
+2. Extract `parentReference.driveId` and `id` from the response.
+3. Call `readSmallBinaryFile` with `documentLibraryId` = driveId and `fileId` = id.
+4. Base64-decode the response and save to disk:
+
+```powershell
+$bytes = [System.Convert]::FromBase64String($base64Content)
+[System.IO.File]::WriteAllBytes("<output_path>", $bytes)
+```
+
+> The MCP SharePoint server uses a broader auth flow than `az` CLI delegated tokens. This fallback is capped at ~5 MB. For larger files where the script also 403s, the user needs to grant their `az` CLI identity access to the SharePoint site.
 
 ### Step 3 - Optional conversion to Markdown
 
@@ -88,7 +105,7 @@ For each file, write a short source note (for example in `sources/index.md`):
 |-------|-----|
 | `az` not found | Install Azure CLI and restart terminal |
 | Token fetch failure | Run `az login` |
-| 401/403 from Graph | Confirm the signed-in account has access to the file |
+| 401/403 from Graph | The `az` CLI token may lack `Sites.Read.All` for that site — try Step 2b MCP fallback. If MCP also fails, the signed-in account truly lacks access |
 | 404 for URL | Verify the link points to a file and is still valid |
 | Unsupported conversion format | Keep raw file and continue without conversion |
 
