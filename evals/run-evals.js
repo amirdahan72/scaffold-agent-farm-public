@@ -148,10 +148,18 @@ function run() {
   if (exists(".vscode/mcp.json")) {
     try {
       const mcp = readJson(".vscode/mcp.json");
-      if (mcp && mcp.servers && mcp.servers["Azure MCP Server"]) {
-        report("PASS", "MCP config", "Azure MCP Server configured");
+      const serverNames = Object.keys(mcp.servers || {});
+      const expectedServers = [
+        "microsoft-outlook-mail",
+        "microsoft-outlook-calendar",
+        "microsoft-teams",
+        "microsoft-sharepoint-and-onedrive",
+      ];
+      const missing = expectedServers.filter((s) => !serverNames.includes(s));
+      if (missing.length === 0) {
+        report("PASS", "MCP config", `M365 MCP servers configured (${expectedServers.length}/${expectedServers.length})`);
       } else {
-        report("FAIL", "MCP config", "Azure MCP Server not configured");
+        report("FAIL", "MCP config", `Missing M365 MCP servers: ${missing.join(", ")}`);
       }
 
       if (mcp && mcp.servers && mcp.servers["microsoft-outlook-mail"]) {
