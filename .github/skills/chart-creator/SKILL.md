@@ -52,11 +52,14 @@ Read the source data (markdown tables, JSON, or structured text) and identify:
 
 ### Step 3 — Generate the chart (Node.js + Vega-Lite)
 
+**Important:** Vega and Vega-Lite are ESM-only packages. Always use `.mjs` file extension and `import` syntax (not `require`).
+
 ```javascript
-const vl = require("vega-lite");
-const vega = require("vega");
-const sharp = require("sharp");
-const fs = require("fs");
+// chart.mjs — use .mjs extension or "type": "module" in package.json
+import * as vl from "vega-lite";
+import * as vega from "vega";
+import sharp from "sharp";
+import fs from "fs";
 
 // Define Vega-Lite spec
 const vlSpec = {
@@ -243,6 +246,7 @@ Charts are saved as PNG or SVG files. To embed in other deliverables:
 | Issue | Solution |
 |-------|----------|
 | `Cannot find module 'vega'` | Run `npm install vega vega-lite sharp` |
+| `require() cannot be used on an ESM graph` | Vega/Vega-Lite are ESM-only. Use `.mjs` extension and `import` syntax instead of `require()` |
 | SVG rendering fails | Ensure `sharp` is installed — it handles SVG→PNG conversion |
 | Chart too small/large | Adjust `width` and `height` in the Vega-Lite spec |
 | Colors not rendering | Use hex strings without `#` in Vega-Lite (e.g., `"0078D4"`) or with `#` depending on context |
