@@ -1,5 +1,6 @@
 node_modules/
 farms/
 work/
-.vscode/
+.vscode/*
+!.vscode/mcp.json
 *.zip
