@@ -328,6 +328,8 @@ Skills and resources are shared across all farms and live in the parent reposito
 - Resources: `../../.github/resources/`
 
 These relative paths are computed from this farm's location (`farms/<name>/`). When reading skill files or the writing style guide, use these paths to construct the full path from the workspace root.
+
+**Important:** This farm must be run from the **repo root** workspace, not from the farm subfolder. The agent's file tools can only access files within the open workspace. If the workspace root is this farm folder, the shared skills at `../../.github/` will be outside the workspace boundary and unreadable.
 ```
 
 The Skills table in the generated orchestrator uses these resolved paths directly:
@@ -466,9 +468,10 @@ For each sub-agent in the dispatch sequence:
 
 Create a short README.md in the farm folder explaining:
 1. What the farm does
-2. How to run it (select agent in Copilot Chat, provide inputs)
-3. What outputs to expect
-4. What skills and tools it uses
+2. **How to run it — must include this instruction:** "Open the **repo root** (`scaffold-agent-farm-public/`) in VS Code — not this farm subfolder. The agent needs access to shared skills in `.github/skills/` which are only visible from the repo root workspace."
+3. How to run it (select agent in Copilot Chat, provide inputs)
+4. What outputs to expect
+5. What skills and tools it uses
 
 ### Step 6 — Scaffold any custom skills needed
 
