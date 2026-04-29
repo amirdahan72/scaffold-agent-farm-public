@@ -305,7 +305,7 @@ Fire ALL queries below in a SINGLE parallel batch:
 The orchestrator should be a **slim file (~100-130 lines)** that:
 
 1. Describes the farm's goal and rules
-2. Lists tools, skills, and MCP servers — **always reference skills using the relative path from the farm root to the repo root** (e.g., `../../.github/skills/web-search/SKILL.md` for a farm at `farms/<name>/`). Since the scaffold agent knows the directory structure, it computes these paths at generation time and bakes them into the orchestrator. Use a three-column table: `| Skill | Path | Purpose |`
+2. Lists tools, skills, and MCP servers — reference skills using paths relative to `REPO_ROOT` (e.g., `.github/skills/web-search/SKILL.md`). The orchestrator resolves `REPO_ROOT` at runtime. Use a three-column table: `| Skill | Path (relative to REPO_ROOT) | Purpose |`
 3. Defines **Step 1: Gather PM Inputs** — questions to ask the PM
 4. Defines **Step 2: Phase 0 Resource Gate** — pause for PM resources
 5. Defines **Step 3: Run Setup** — create `work/runs/YYYY-MM-DD-<slug>/`
@@ -313,30 +313,28 @@ The orchestrator should be a **slim file (~100-130 lines)** that:
 
 ##### Shared Path Resolution (CRITICAL)
 
-Farms live under `farms/<name>/` and shared skills/resources live at the repo root under `.github/`. The scaffold agent knows this structure. When generating an orchestrator, **compute the correct relative paths and embed them directly** in the generated file.
-
-For a farm at `farms/<name>/`, the relative paths are:
-- Skills: `../../.github/skills/<skill-name>/SKILL.md`
-- Writing style guide: `../../.github/resources/writing-style-guide.md`
+Farms live under `farms/<name>/` and shared skills/resources live at the repo root under `.github/`. The orchestrator resolves `REPO_ROOT` at runtime by navigating up two directory levels from its workspace root, then uses `read_file` with absolute paths.
 
 The generated orchestrator must include a `## Shared Path Resolution` section:
 ```markdown
 ## Shared Path Resolution
 
-Skills and resources are shared across all farms and live in the parent repository:
-- Skills: `../../.github/skills/`
-- Resources: `../../.github/resources/`
+Skills and resources are shared across all farms and live in the parent repository at `.github/skills/` and `.github/resources/`. This farm is located at `farms/<name>/`, so the relative offset is `../../`.
 
-These relative paths are computed from this farm's location (`farms/<name>/`). When reading skill files or the writing style guide, use these paths to construct the full path from the workspace root.
+**Before any other step**, resolve the absolute path to shared skills:
+1. Get this workspace's absolute root path (the directory you are running from).
+2. Navigate up two levels from it (i.e., append `/../..` or resolve `../../`).
+3. Verify the parent repo by calling `list_dir` on `<resolved_parent>/.github/skills/` — you should see skill folders.
+4. Store this resolved absolute path as `REPO_ROOT` for all subsequent `read_file` calls to skill and resource files.
 
-**Important:** This farm must be run from the **repo root** workspace, not from the farm subfolder. The agent's file tools can only access files within the open workspace. If the workspace root is this farm folder, the shared skills at `../../.github/` will be outside the workspace boundary and unreadable.
+Use `read_file` with these absolute paths — it works on files outside the workspace boundary.
 ```
 
-The Skills table in the generated orchestrator uses these resolved paths directly:
+The Skills table in the generated orchestrator references paths relative to REPO_ROOT:
 ```markdown
-| Skill | Path | Purpose |
+| Skill | Path (relative to REPO_ROOT) | Purpose |
 |-------|------|---------|
-| web-search | `../../.github/skills/web-search/SKILL.md` | Fetch and summarize public web pages |
+| web-search | `.github/skills/web-search/SKILL.md` | Fetch and summarize public web pages |
 ```
 
 ##### Skill Injection Rule (CRITICAL)
@@ -344,7 +342,7 @@ The Skills table in the generated orchestrator uses these resolved paths directl
 Sub-agents are stateless — they cannot read files from the workspace unless the orchestrator gives them the content. When a prompt template references a skill (e.g., *"Read the `web-search` skill"*), the **orchestrator must**:
 
 1. **Before dispatching**, scan the prompt template for skill references
-2. **Read each referenced SKILL.md** file using the relative paths embedded in the orchestrator
+2. **Read each referenced SKILL.md** file using `read_file` with absolute paths (`REPO_ROOT/.github/skills/<name>/SKILL.md`)
 3. **Inline the skill content** into the sub-agent prompt under a `## Skill: <name>` section
 4. **Remove the "Read the skill at..." instruction** from the prompt — the content is now inline
 
@@ -354,9 +352,10 @@ The orchestrator's Rules section must include:
 
 ```markdown
 - **Skill injection** — before dispatching any sub-agent, read all skill SKILL.md files
-  referenced in its prompt template and inline their content into the sub-agent prompt
+  referenced in its prompt template using `read_file` with absolute paths
+  (`REPO_ROOT/.github/skills/<name>/SKILL.md`) and inline their content into the sub-agent prompt
 - **Writing style injection** — before dispatching any sub-agent that produces written content
-  (Synthesizer, Reviser, Writer), read `../../.github/resources/writing-style-guide.md` and inline it
+  (Synthesizer, Reviser, Writer), read `REPO_ROOT/.github/resources/writing-style-guide.md` and inline it
   into the sub-agent prompt under a `## Writing Style Guide` section
 ```
 
@@ -461,17 +460,14 @@ For each sub-agent in the dispatch sequence:
 - Which skill to use (doc-writer, ppt-creator, docx-writer, etc.)
 - Output location (work/runs/<slug>/output/)
 - Strip internal process notes — revision log is not part of the deliverable
-- **Writing style** — the orchestrator must read `../../.github/resources/writing-style-guide.md` and inline it into the Writer and Synthesizer prompts under a `## Writing Style Guide` section. All prose must follow this style.
+- **Writing style** — the orchestrator must read `REPO_ROOT/.github/resources/writing-style-guide.md` and inline it into the Writer and Synthesizer prompts under a `## Writing Style Guide` section. All prose must follow this style.
 ```
 
 ### Step 5 — Generate the farm README
 
 Create a short README.md in the farm folder explaining:
 1. What the farm does
-2. **How to run it — must include this instruction:** "Open the **repo root** (`scaffold-agent-farm-public/`) in VS Code — not this farm subfolder. The agent needs access to shared skills in `.github/skills/` which are only visible from the repo root workspace."
-3. How to run it (select agent in Copilot Chat, provide inputs)
-4. What outputs to expect
-5. What skills and tools it uses
+2. **How to run it:** \"Open this farm folder in VS Code, select the agent in Copilot Chat, and provide your inputs. The agent automatically resolves shared skills from the parent repo using absolute paths.\"\n3. What outputs to expect\n4. What skills and tools it uses
 
 ### Step 6 — Scaffold any custom skills needed
 
@@ -482,12 +478,12 @@ If the farm needs a capability not covered by the shared skills, use the `make-s
 After generating a farm, verify:
 
 - [ ] `farms/<name>/` folder exists with correct structure (including `prompts/`)
-- [ ] Orchestrator `.agent.md` includes `## Shared Path Resolution` section with correct relative paths to skills and resources
+- [ ] Orchestrator `.agent.md` includes `## Shared Path Resolution` section with REPO_ROOT resolution steps
 - [ ] Orchestrator `.agent.md` has valid frontmatter (name + description)
 - [ ] Every sub-agent has a corresponding prompt template in `prompts/*.prompt.md`
 - [ ] Prompt templates have `{{PARAMETER}}` markers matching the orchestrator's parameter table
 - [ ] All referenced skills exist in `.github/skills/`
-- [ ] Skills are referenced by relative path from the farm root (e.g., `../../.github/skills/<name>/SKILL.md`) in the orchestrator's skill table
+- [ ] Skills are referenced by path relative to REPO_ROOT (e.g., `.github/skills/<name>/SKILL.md`) in the orchestrator's skill table
 - [ ] Sub-agents have clear, non-overlapping responsibilities
 - [ ] **Skeptic and Reviser are separate sub-agents** (Skeptic writes critique, Reviser evaluates and addresses it with independent judgment)
 - [ ] **Reviser prompt includes `{{PM_OVERRIDES}}` parameter** and Disputed Items category in revision log
@@ -508,13 +504,13 @@ After generating a farm, verify:
 - [ ] Instructions mention installing required packages before skill use
 - [ ] **PM checkpoints use `vscode_askQuestions`** — every checkpoint (after collection, synthesis, and critique) uses `vscode_askQuestions` with progress summary and proceed/adjust options — never plain chat text
 - [ ] **Checkpoints are never collapsed** — orchestrator pauses at each checkpoint individually, even if PM approved all previous ones
-- [ ] **Writing style guide injected** — orchestrator reads `../../.github/resources/writing-style-guide.md` and inlines it into Synthesizer, Reviser, and Writer sub-agent prompts
+- [ ] **Writing style guide injected** — orchestrator reads `REPO_ROOT/.github/resources/writing-style-guide.md` and inlines it into Synthesizer, Reviser, and Writer sub-agent prompts
 
 ## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
-| Agent doesn't find skills | Skills live at the repo root under `.github/skills/`. The generated orchestrator should reference them via relative path from the farm folder (e.g., `../../.github/skills/` for a farm at `farms/<name>/`). If the orchestrator has wrong paths, regenerate it or fix the relative path. |
+| Agent doesn't find skills | The orchestrator must resolve `REPO_ROOT` by navigating up two levels from the workspace root and verify `.github/skills/` exists via `list_dir`. Then use `read_file` with absolute paths (`REPO_ROOT/.github/skills/<name>/SKILL.md`). `read_file` works on files outside the workspace boundary. |
 | Work IQ not working | Run `workiq version` to verify installation. Run `workiq accept-eula` if needed. |
 | Azure MCP not available | Install the Azure MCP Server VS Code extension: `ms-azuretools.vscode-azure-mcp-server` |
 | Context window filling up | Ensure collectors summarize (10-20 lines per source). Don't dump full web pages. |

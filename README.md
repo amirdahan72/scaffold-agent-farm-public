@@ -6,15 +6,15 @@ Tell the master agent what you want to build (a PRD, competitive brief, roadmap,
 
 ## Quick Start
 
-1. **Open this folder** in VS Code (the repo root — not a subfolder).
+1. **Open this folder** in VS Code.
 2. **Open Copilot Chat** → switch to **Agent mode**.
 3. **Select the `scaffold-agent-farm` agent** from the agents dropdown.
 4. **Describe what you want**, e.g.:
    > "Create an agent farm that builds a product requirements document for feature X on product Y."
 5. The master agent will scaffold a complete agent farm under `farms/`.
-6. **Run the generated agent** by selecting it in Copilot Chat and providing your inputs.
+6. **Open the generated farm folder** in VS Code and select its agent from the dropdown.
 
-> **Important:** Always open the repo root in VS Code, even when running a generated farm. Generated farms reference shared skills via relative paths (`../../.github/skills/`). If you open a farm subfolder as the workspace, the agent cannot access these shared files.
+Generated farms automatically resolve shared skills from the parent repo using absolute paths — you can open a farm folder directly without losing access to `.github/skills/`.
 
 ## What's in This Workspace
 
