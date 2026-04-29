@@ -87,6 +87,8 @@ farms/<your-farm-name>/
 └── README.md                        ← how to use the farm
 ```
 
+The orchestrator references shared skills and resources via relative paths to the parent repo's `.github/` directory (e.g., `../../.github/skills/`). These paths are computed by the scaffold agent at generation time.
+
 ## How to Run a Generated Farm
 
 After I create a farm:
@@ -103,7 +105,7 @@ After I create a farm:
 - I always use the **make-agent-farm** skill to scaffold new farms.
 - If a custom skill is needed that doesn't exist yet, I use the **make-skill-template** skill to create it.
 - Generated farms use the **orchestrator + prompt templates** pattern — a slim orchestrator dispatches sub-agents via `runSubagent`.
-- Generated orchestrators reference **shared skills** from `.github/skills/` — no duplication.
+- Generated orchestrators resolve shared skills and resources via **relative paths** from the farm folder to the repo root (e.g., `../../.github/skills/` for a farm at `farms/<name>/`). The scaffold agent computes these paths at generation time and embeds them directly in the orchestrator — no extra config files needed.
 - I follow the **STM pattern**: sub-agents summarize to disk, later sub-agents read from disk.
 - Each sub-agent gets a **focused prompt template** (~40-60 lines) with `{{PARAMETER}}` markers for runtime injection.
 - **Skeptic and Reviser are separate sub-agents** — the Skeptic writes a critique to `review-notes.md`, the Reviser evaluates it with independent judgment (fixing valid issues, disputing invalid ones). The orchestrator pauses between them for PM review and collects any override notes to inject into the Reviser.
