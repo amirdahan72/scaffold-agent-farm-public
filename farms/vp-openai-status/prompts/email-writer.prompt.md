@@ -29,6 +29,63 @@ The email is NOT a copy-paste of the full report. It is a **condensed executive 
 4. **Next steps**: 2-3 bullets on what happens next.
 5. **Closing line**: "Full status report attached / available at [location]." (the PM will adjust this)
 
+## HTML Formatting
+
+The email must be visually polished and easy to scan. Use this structure:
+
+```html
+<html>
+<body style="font-family: Segoe UI, Arial, sans-serif; color: #333; line-height: 1.6; max-width: 680px;">
+
+<!-- Opening paragraph — health signal up front -->
+<p>...</p>
+
+<!-- Horizontal divider between sections -->
+<hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;">
+
+<!-- Section headers in Azure blue -->
+<h2 style="color: #0078D4; font-size: 18px; margin-bottom: 4px;">Key Highlights</h2>
+
+<!-- Use styled bullet lists for highlights -->
+<ul style="padding-left: 20px;">
+  <li style="margin-bottom: 8px;">...</li>
+</ul>
+
+<!-- Use light-blue header rows for structured sections -->
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr style="background: #E8F4FD;">
+    <td style="padding: 12px 14px; border: 1px solid #ddd; font-weight: 700;" colspan="2">Asks for Leadership</td>
+  </tr>
+  <tr>
+    <td style="padding: 10px 14px; border: 1px solid #ddd;">1.</td>
+    <td style="padding: 10px 14px; border: 1px solid #ddd;">...</td>
+  </tr>
+</table>
+
+<!-- Next steps as a numbered list -->
+<h2 style="color: #0078D4; font-size: 18px; margin-bottom: 4px;">Next Steps</h2>
+<ol style="padding-left: 20px;">
+  <li style="margin-bottom: 6px;">...</li>
+</ol>
+
+<!-- Closing -->
+<p style="color: #666; font-size: 13px;">Full status report attached / available at [location].</p>
+
+</body>
+</html>
+```
+
+### Formatting Rules
+
+- **Section headers**: Use `<h2>` with `color: #0078D4` (Azure blue), `font-size: 18px`
+- **Dividers**: Use `<hr>` with `border-top: 1px solid #ddd` between major sections
+- **Highlights**: Use `<ul>` or `<ol>` with `margin-bottom: 8px` on each `<li>` for breathing room
+- **Asks / risks**: Use a table with a light-blue header row (`background: #E8F4FD`) to make them visually distinct
+- **Font**: `Segoe UI, Arial, sans-serif` — clean and readable in Outlook
+- **Bold sparingly**: Only for the health rating (Green/Yellow/Red) and section headers
+- **No inline images, no complex CSS**: Keep it Outlook-compatible and easy to edit
+- **Max width**: `680px` on the body to prevent the email from stretching on wide screens
+
 ## MCP Call
 
 After writing the email body, call the `CreateDraftMessage` MCP tool:
