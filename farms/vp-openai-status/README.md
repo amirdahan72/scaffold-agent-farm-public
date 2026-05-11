@@ -24,46 +24,42 @@ A multi-agent system that produces a VP-level status report on the OpenAI custom
 
 ### Steps
 
-1. **Clone the repo:**
-   ```bash
-   git clone <repo-url>
-   cd scaffold-agent-farm-public
-   ```
+1. **Open VS Code** and open Copilot Chat (click the sparkle icon on the right sidebar). Make sure you're in **Agent mode** (click the mode dropdown at the top of the chat panel).
 
-2. **Install npm dependencies** (used by chart/doc skills):
-   ```bash
-   npm install
-   ```
+2. **Paste the following into the chat** and press Enter. Copilot will run each command for you:
 
-3. **Open the farm folder in VS Code:**
-   ```
-   code farms/vp-openai-status
-   ```
+   > Please run these commands for me:
+   > 1. `git clone https://github.com/amirdahan72/scaffold-agent-farm-public.git`
+   > 2. `cd scaffold-agent-farm-public`
+   > 3. `npm install`
+   > 4. Then open the folder `farms/vp-openai-status` in a new VS Code window
 
-4. **Verify MCP servers connect.** The parent repo's `.vscode/mcp.json` provides the Microsoft Outlook MCP automatically. When you open the farm subfolder as a workspace, VS Code may prompt you to approve the MCP servers — click "Allow."
+3. **Approve MCP servers.** When the new VS Code window opens, you may see a pop-up asking to approve MCP servers (Outlook, Teams, etc.). Click **"Allow"** on each one.
 
-5. **Authenticate Work IQ** (first run only):
-   ```bash
-   workiq accept-eula
-   workiq ask -q "test"
-   ```
-   This triggers browser-based Microsoft auth. You need a Copilot-licensed M365 account.
+4. **Authenticate Work IQ** (first run only). In the new VS Code window, open Copilot Chat again and paste:
+
+   > Please run these commands for me:
+   > 1. `workiq accept-eula`
+   > 2. `workiq ask -q "test"`
+
+   A browser window will open asking you to sign in with your Microsoft account. Sign in and return to VS Code.
 
 ### Troubleshooting
 
-- **"workiq: command not found"** — run `npm install -g @microsoft/workiq` and restart your terminal.
-- **MCP servers not connecting** — open the parent repo folder in VS Code first (`code scaffold-agent-farm-public`), then navigate to `farms/vp-openai-status/`. The `.vscode/mcp.json` is at the repo root.
-- **No Outlook draft created** — the `microsoft-outlook-mail` MCP requires Microsoft tenant auth. Click "Sign in" when VS Code prompts.
+| Problem | Solution |
+|---------|----------|
+| "workiq: command not found" | Paste `npm install -g @microsoft/workiq` into the terminal and press Enter. Then close and reopen the terminal. |
+| MCP servers not connecting | Close VS Code. Open a terminal and paste: `code scaffold-agent-farm-public` — then from inside VS Code, open the `farms/vp-openai-status` folder. |
+| No Outlook draft created | When VS Code shows a "Sign in" prompt for Microsoft, click it and complete the sign-in in your browser. |
 
 ## How to Run
 
-1. Open `farms/vp-openai-status/` in VS Code (or the parent repo workspace).
-2. Open GitHub Copilot Chat in **Agent mode**.
-3. Select **vp-openai-status** from the agents dropdown.
-4. Type **"run"** and follow the prompts.
-5. The agent will pause at multiple checkpoints for your review and approval.
-
-The agent automatically resolves shared skills from the parent repo using relative paths.
+1. In VS Code, click the **Copilot Chat** icon on the right sidebar (the sparkle icon).
+2. At the top of the chat panel, switch to **Agent mode** (click the mode dropdown if it says "Ask" or "Edit").
+3. In the agent dropdown (next to the mode), select **vp-openai-status**.
+4. Type **run** in the chat box and press Enter.
+5. The agent will ask you a few questions (customer name, time range, etc.) — answer them using the buttons and text fields that appear.
+6. It will pause at three checkpoints for your review before continuing. Just click the button to proceed, or review the files first.
 
 ## Outputs
 
